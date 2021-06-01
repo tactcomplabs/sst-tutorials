@@ -30,8 +30,10 @@
 * developing custom SST components
 * Integration testing, integration with PyBind
 
-### [Building SST in Docker/Spack](Containers.md)
+### [Building SST in Singularity/Docker/Spack](Containers.md)
 * buildling basic docker containers
 * building basic spack containers
+* building basic singularity containers
 * building parallel docker containers
 * building parallel spack containers
+* building parallel singularity containers
