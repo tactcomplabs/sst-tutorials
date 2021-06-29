@@ -5,7 +5,14 @@
     1. [Introduction](#introduction)
     2. [Singularity Installation](#singularityinstallation)
     3. [Building Basic Singularity Containers](#buildingbasicsingularitycontainers)
+        1. [Pre-Built Formulas](#basicprebuildformulas)
+        2. [Advanced: Container Construction](#basiccontainerconstruction)
+            1. [RedHat Linux](#basicredhat)
+            2. [Ubuntu/Debian Linux](#basicubuntu)
     4. [Building Parallel Singularity Containers](#buildingparallelsingularitycontainers)
+        1. [Singularity Networking](#singularitynetworking)
+        2. [Pre-Built Formulas](#parallelprebuildformulas)
+        3. [Advanced: Container Construction](#parallelcontainerconstruction)
     5. [Singularity References](#singularityreferences)
 2. [Docker](#docker)
 3. [Spack](#spack)
@@ -40,7 +47,7 @@ The installation guide for Singularity 3.8 can be found here:
 
 ### Building Basic Singularity Containers <a name="buildingbasicsingularitycontainers"></a>
 
-#### Pre-Built Formulas
+#### Pre-Built Formulas <a name="basicprebuildformulas"></a>
 
 We *HIGHLY* suggest that users utilize the pre-built singularity container 
 formulas.  These formulas contain basic installations of SST-Core and/or SST-Elements
@@ -116,7 +123,7 @@ Verifying that the container was build successfully can be performed using the f
 $> singularity exec sstcore-11.0.0-ubuntu-18.04.sif sst --help
 ```
 
-#### Advanced: Container Construction
+#### Advanced: Container Construction <a name="basiccontainerconstruction"></a>
 
 Users also have the ability build and/or modify custom SST container definitions.  
 We *HIGHLY* suggest that you utilize the existing container definitions mentioned 
@@ -131,7 +138,7 @@ is for the container.  CentOS (and other RedHat-derived Linux distributions)
 will utilize a `yum` package infrastructure.  Ubuntu (and other Debian-derived 
 Linux distributions) will utilize a `deb` or `dpkg` package infrastructure.  
 
-##### RedHat-Based Linux
+##### RedHat-Based Linux <a name="basicredhat"></a>
 
 RedHat-derived container definitions contain seven (7) individual sections.  
 The first section defines the container prologue that governs the overall layout 
@@ -250,7 +257,7 @@ repsective container.  An example is as follows:
     SST 11.0.0-Centos 7: Creates a basic SST Core image with the necessary software dependencies
 ```
 
-##### Ubuntu/Debian-Based Linux
+##### Ubuntu/Debian-Based Linux <a name="basicubuntu"></a>
 
 Ubuntu/Debian-derived container definitions contain seven (7) individual sections.  
 The first section defines the container prologue that governs the overall layout 
@@ -362,11 +369,11 @@ repsective container.  An example is as follows:
 
 ### Building Parallel Singularity Containers <a name="buildingparallelsingularitycontainers"></a>
 
-#### Singularity Networking
+#### Singularity Networking <a name="singularitynetworking"></a>
 
-#### Pre-Built Formulas
+#### Pre-Built Formulas <a name="parallelprebuildformulas"></a>
 
-#### Advanced: Container Construction
+#### Advanced: Container Construction <a name="parallelcontainerconstruction"></a>
 
 ### Singularity References <a name="singularityreferences"></a>
 - [Singularity Installation](https://sylabs.io/guides/3.8/user-guide/quick_start.html#quick-installation-steps)
