@@ -2,11 +2,11 @@
 
 ## Table of Contents
 1. [Singularity](#singularity)
-  1. [Introduction](#introduction)
-  2. [Singularity Installation](#singularityinstallation)
-  3. [Building Basic Singularity Containers](#buildingbasicsingularitycontainers)
-  4. [Building Parallel Singularity Containers](#buildingparallelsingularitycontainers)
-  5. [Singularity References](#singularityreferences)
+    1. [Introduction](#introduction)
+    2. [Singularity Installation](#singularityinstallation)
+    3. [Building Basic Singularity Containers](#buildingbasicsingularitycontainers)
+    4. [Building Parallel Singularity Containers](#buildingparallelsingularitycontainers)
+    5. [Singularity References](#singularityreferences)
 2. [Docker](#docker)
 3. [Spack](#spack)
 
