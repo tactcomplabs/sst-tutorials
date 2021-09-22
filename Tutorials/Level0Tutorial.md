@@ -11,12 +11,12 @@ collection of sequential simulators—possibly running on different
 processors are logical processes communicating exclusively by 
 exchanging messages.  
 
-How is this differnet from traditional "simulators?"  Traditional 
+How is this different from traditional "simulators?"  Traditional 
 simulators often operate with sequential execution models.  For 
 every new iteration of simulated wall clock time, the simulator 
 must consider updates to each and every simulated component.  This 
 often implies very large runtime overheads for even simplistic 
-simulation models.  In contast, PDES models only update the portions 
+simulation models.  In contrast, PDES models only update the portions 
 of the simulation model (or models) that register changes (events) 
 within the given simulated window of time. In this manner, A discrete 
 event simulation model assumes the system being simulated 
@@ -51,8 +51,8 @@ an *event*.
 
 ![Discrete Event Simulation](imgs/DesSim.png)
 
-These *events* are an important, disctinctive feature of discrete event 
-simulation.  Events can be utilzied to parallelize simulations across multiple cores 
+These *events* are an important, distinctive feature of discrete event 
+simulation.  Events can be utilized to parallelize simulations across multiple cores 
 and multiple nodes of a cluster.  In DES/PDES models, the simulations are *event-centric*.  
 In these event-centric simulations, we have the ability to utilize event queues 
 in order to trigger complex sets of simulation events only when necessary/appropriate.  

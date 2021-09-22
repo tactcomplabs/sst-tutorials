@@ -12,7 +12,7 @@
     4. [Building Parallel Singularity Containers](#buildingparallelsingularitycontainers)
         1. [Singularity Networking](#singularitynetworking)
         2. [Pre-Built Formulas](#parallelprebuildformulas)
-        3. [Advanced: Container Construction](#parallelcontainerconstruction)
+        3. [Executing Containers with MPI](#mpi)
     5. [Singularity References](#singularityreferences)
 2. [Docker](#docker)
 3. [Spack](#spack)
@@ -38,7 +38,7 @@ advanced (parallel) method provides much greater scalability of simulations.
 
 In order to install Singularity on your respective system, utilize 
 the instructions provided by the Singularity installation guides.  For this 
-tutorial, we assume the use of Singularity verison 3.8. Pay special attention 
+tutorial, we assume the use of Singularity version 3.8. Pay special attention 
 to the guidelines associated with installing and utilizing the `Go` infrastructure.
 
 The installation guide for Singularity 3.8 can be found here: 
@@ -76,7 +76,7 @@ The supported operating systems are listed as follows:
 Prior to building the provided SST containers, you must first bootstrap the 
 environment.  The repository contains a `bootstrap.sh` script that can be 
 utilized to initialize the environment, find available packages and download 
-the appropriate SST source packages.  Bootstrapping the envioronment can be performed 
+the appropriate SST source packages.  Bootstrapping the environment can be performed 
 as follows:
 
 ```
@@ -93,7 +93,7 @@ $> cd ./containers/singularity/
 $> sudo singularity build sstcore-11.0.0-ubuntu-18.04.sif sstcore-11.0.0-ubuntu-18.04.def
 ```
 
-To create a singularity container without using `sudo` privilages it is possible to use
+To create a singularity container without using `sudo` privileges it is possible to use
 singularity's `fakeroot` option.  Depending on your Linux kernel version, additional
 system configuration steps must be taken.
 
@@ -360,7 +360,7 @@ target container image.
 ```
 
 The final section contains a help message describing the contents of the 
-repsective container.  An example is as follows:
+respective container.  An example is as follows:
 
 ```
 %help
@@ -371,9 +371,92 @@ repsective container.  An example is as follows:
 
 #### Singularity Networking <a name="singularitynetworking"></a>
 
+Singularity currently supports containerized network options with the [CNI](https://github.com/containernetworking/cni) 
+infrastructure.  As a result, users have the ability to enable/disable host-native 
+network access, change the DNS mechanisms, change the native container hostname and initiate 
+port forwarding.  In general, the standard network options have been tested to work 
+with MPI parallel execution across nodes.  However, in some cases, users may be required 
+to enable/disable specific network interfaces in order to ensure that the correct high 
+performance network is selected for MPI execution.  This can be done be utilizing 
+the `network` command and explicitly enabling interfaces as follows:
+
+```
+singularity exec --net --network ptp /path/to/container.sif sst_info
+```
+
+For more information regarding specific network configuration parameters as well as the 
+CNI infrastructure, refer to the singularity network options reference below.  
+
 #### Pre-Built Formulas <a name="parallelprebuildformulas"></a>
 
-#### Advanced: Container Construction <a name="parallelcontainerconstruction"></a>
+We *HIGHLY* suggest that users utilize the pre-built singularity container 
+formulas.  These formulas contain basic installations of SST-Core and/or SST-Elements
+that can be utilized and/or modified to serve as the basis for a functional 
+SST environment.  Each of the pre-built containers contains the necessary logic 
+and mechanisms to build and execute parallel Singularity SST containers.  Note that the 
+containers utilize native OpenMPI installs (using `apt`) for the Ubuntu containers and 
+custom-built OpenMPI installs for the CentOS containers.  This ensures that the minimum 
+version of the OpenMPI infrastructure is compatible with SST.  The CentOS containers are 
+prebuilt with OpenMPI version 4.0.5 (release).  
+
+Please note that the host execution system must also have the *same* version of OpenMPI 
+installed.  Otherwise, the OpenMPI ORTD/ORTE launch mechanisms will not function correctly!
+Finding the respective OpenMPI version installed in the container can be done via the following 
+commands:
+
+```
+singuarity exec sstcore-11.0.0-ubuntu-18.04.sif ompi_info
+
+Package: Open MPI buildd@lcy01-amd64-009 Distribution
+                Open MPI: 2.1.1
+  Open MPI repo revision: v2.1.0-100-ga2fdb5b
+   Open MPI release date: May 10, 2017
+                Open RTE: 2.1.1
+  Open RTE repo revision: v2.1.0-100-ga2fdb5b
+   Open RTE release date: May 10, 2017
+                    OPAL: 2.1.1
+      OPAL repo revision: v2.1.0-100-ga2fdb5b
+       OPAL release date: May 10, 2017
+                 MPI API: 3.1.0
+            Ident string: 2.1.1
+                  Prefix: /usr
+ Configured architecture: x86_64-pc-linux-gnu
+
+```
+
+#### Executing Containers with MPI <a name="mpi"></a>
+
+The best path to building and executing SST using MPI within Singularity containers 
+is utilizing the host-based launch mechanism.  This utilizes the host infrastructure, 
+including the host's batch scheduling infrastructure, to launch a series of singularity 
+containers across the nodes in a compute cluster for parallel execution.  This is analogous 
+to executing SST using MPI except the SST binaries and libraries reside within the container.  
+
+Fundamentally speaking, this is done via running singularity under the standard `mpirun` command 
+set.  The user specifies the number of MPI ranks to utilize and optionally a host file with the target 
+nodes.  The SST commands are then `exec'd` inside the target singularity container as shown above.  We highly 
+recommend utilize the system's standard batch scheduling infrastructure in order to ease the creation 
+and management of proper host files for execution.  We provide an example batch script for the Slurm 
+infrastructure to execute across 8 compute nodes below.  
+
+```
+#!/bin/bash
+# Sample Slurm Script
+
+#-- load the modules
+module load openmpi/gcc/64/2.1.1 singularity/3.8.0
+
+#-- Setup the hosts
+srun hostname > output.txt
+
+#-- Execute SST
+mpirun --hostfile output.txt -N 8 singularity exec /path/to/container.sif sst -v /path/to/sst/test.py
+```
+
+You can submit the aforementioned Slurm script to the batch system using the following command:
+```
+sbatch -N8 slurm.sh
+```
 
 ### Singularity References <a name="singularityreferences"></a>
 - [Singularity Installation](https://sylabs.io/guides/3.8/user-guide/quick_start.html#quick-installation-steps)
@@ -383,4 +466,11 @@ repsective container.  An example is as follows:
 
 ## Docker <a name="docker"></a>
 
+TBD
+
 ## Spack <a name="spack"></a>
+
+Spack currently has standard package builds for SST.  You can install the standard builds as follows:
+```
+spack install sst-core sst-elements
+```
