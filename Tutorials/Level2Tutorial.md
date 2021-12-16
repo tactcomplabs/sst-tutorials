@@ -188,13 +188,13 @@ FILE{n-1}.json
 
 When executing using the parallel graph loader, we need additional options 
 and file prefixes on the command line.  First, we must specify the 
-`--parallel-load` option in order to trigger the SST core to load 
+`--parallel-output` option in order to trigger the SST core to load 
 the per-rank simulation files.  Next, we must specify the base file 
 prefix as the input to the simulation.  Using our example above (`FILE0.json`) 
 would be specified as `FILE.json`.  An example of doing so resembles the following:
 
 ```
-$> mpirun --hostfile output.txt -n2 sst --parallel-load FILE.json
+$> mpirun --hostfile output.txt -n2 sst --parallel-output=1 FILE.json
 ```
 
 In addition to the aforementioned parallel graph loading, the latest development 
@@ -208,7 +208,7 @@ Python file into the appropriate `N` output JSON files in the same monotonically
 increasing form as outlined above.
 
 ```
-$> mpirun --hostfile output.txt -n2 sst --parallel-load --output-json=FILE.json FILE.py
+$> mpirun --hostfile output.txt -n2 sst --parallel-output=1 --output-json=FILE.json FILE.py
 ```
 
 The following are several candidate examples of parallel JSON input files using 
